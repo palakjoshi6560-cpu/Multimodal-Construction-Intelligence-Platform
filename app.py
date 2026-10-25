@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 from io import BytesIO
 import streamlit as st
@@ -43,8 +44,18 @@ div[data-testid="stMetric"] [data-testid="stMetricDelta"] {
 with st.sidebar:
     st.title("🏗️ Construction AI")
     st.caption("Skill Wallet Capstone · Project 1")
-    api_key = st.text_input("Gemini API key", type="password",
-                            help="Used only for requests during this session. Never paste your key into source code.")
+
+    try:
+        api_key = st.secrets["GEMINI_API_KEY"]
+    except Exception:
+        api_key = os.getenv("GEMINI_API_KEY", "")
+
+    if not api_key:
+        api_key = st.text_input(
+            "Gemini API key",
+            type="password",
+            help="Used only for requests during this session."
+        )
     st.caption("No key? Demo mode remains available.")
     st.divider()
     st.subheader("Architecture")
